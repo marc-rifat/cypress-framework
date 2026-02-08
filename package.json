@@ -1,32 +1,85 @@
 {
+  "_fileDescription": "Node.js project manifest for the Cypress E2E test framework. Defines the project metadata, npm scripts for running tests and tools, and all development dependencies. This is the first file npm reads when you run 'npm install' or any 'npm run' command. All dependencies here are devDependencies because this is a test framework -- nothing is deployed to production.",
+
   "name": "cypress-framework",
   "version": "1.0.0",
   "description": "Cypress E2E test framework with TypeScript and Page Object Model for login page testing",
+
+  "_private_description": "When set to true, npm refuses to publish this package to the npm registry. This is a safety measure for internal projects and test frameworks that should never be published as a public package.",
   "private": true,
+
+  "_scripts_description": "npm scripts are shortcuts for commonly used commands. Run them with 'npm run <script-name>'. Each key is the script name and the value is the shell command that executes.",
   "scripts": {
+
+    "_cy_open_description": "Opens the Cypress Test Runner GUI (interactive mode). A visual interface where you can select individual spec files, watch tests execute in a real browser, and use time-travel debugging to inspect each command. Best for development and debugging.",
     "cy:open": "cypress open",
+
+    "_cy_run_description": "Runs ALL test specs in headless mode using the default Electron browser. No browser window is shown -- results are printed to the terminal. Used for quick local validation.",
     "cy:run": "cypress run",
+
+    "_cy_run_chrome_description": "Runs all tests headlessly in Chrome. Chrome is the most common browser for E2E testing and matches what most users browse with.",
     "cy:run:chrome": "cypress run --browser chrome",
+
+    "_cy_run_firefox_description": "Runs all tests headlessly in Firefox. Used for cross-browser validation. Requires Firefox to be installed locally (not available on all machines -- CI handles this).",
     "cy:run:firefox": "cypress run --browser firefox",
+
+    "_cy_run_edge_description": "Runs all tests headlessly in Microsoft Edge. Edge is Chromium-based so behavior is similar to Chrome, but testing confirms compatibility. Requires Edge to be installed locally.",
     "cy:run:edge": "cypress run --browser edge",
+
+    "_cy_run_all_browsers_description": "Runs the full test suite sequentially in Chrome, then Firefox, then Edge. The && operator means if Chrome fails, Firefox and Edge won't run. Used for thorough cross-browser validation before releases.",
     "cy:run:all-browsers": "npm run cy:run:chrome && npm run cy:run:firefox && npm run cy:run:edge",
+
+    "_cy_run_parallel_description": "Uses cypress-parallel to split spec files across 3 threads running simultaneously. The -s flag specifies which npm script to run, -t sets the thread count (3 matches our 3 spec files), and -d points to the directory containing spec files. Reduces total run time by ~3x.",
     "cy:run:parallel": "cypress-parallel -s cy:run -t 3 -d cypress/e2e",
+
+    "_cy_run_parallel_chrome_description": "Same as cy:run:parallel but uses Chrome instead of the default Electron browser.",
     "cy:run:parallel:chrome": "cypress-parallel -s cy:run:chrome -t 3 -d cypress/e2e",
+
+    "_cy_report_description": "Opens the Mochawesome HTML report in your default browser. The report is generated automatically at the end of each 'cypress run' execution. Run tests first (e.g., npm run cy:run:chrome), then run this to view results.",
     "cy:report": "open cypress/reports/index.html",
+
+    "_lint_description": "Runs ESLint on all TypeScript files inside the cypress directory. Checks for code quality issues, TypeScript errors, and Cypress best practices defined in .eslintrc.json. Exit code 1 if any errors are found.",
     "lint": "eslint 'cypress/**/*.ts'",
+
+    "_lint_fix_description": "Same as 'lint' but automatically fixes issues that ESLint can resolve programmatically (like missing semicolons, wrong quotes, import ordering). Issues that require human judgment are reported but not fixed.",
     "lint:fix": "eslint 'cypress/**/*.ts' --fix",
+
+    "_typecheck_description": "Runs the TypeScript compiler (tsc) in check-only mode (--noEmit means no JavaScript files are generated). Validates that all types are correct across the entire project. Catches errors like wrong argument types, missing properties, and incompatible return types."
+    ,
     "typecheck": "tsc --noEmit"
   },
+
+  "_devDependencies_description": "All packages needed for development and testing. 'devDependencies' means they are NOT included in production builds (not relevant here since this is a test framework, but it's the correct category). The ~ prefix (e.g., ~13.17.0) allows patch updates only (13.17.x). The ^ prefix (e.g., ^3.8.2) allows minor and patch updates (3.x.x).",
   "devDependencies": {
+
+    "_cypress_description": "The core Cypress testing framework. Provides the cy object, browser automation, assertion library, Test Runner GUI, and CLI. Version ~13.17.0 pins to the 13.17.x range.",
     "cypress": "~13.17.0",
+
+    "_cypress_mochawesome_reporter_description": "Replaces Cypress's default terminal output with rich HTML reports. Has two components: a browser-side part (registered in e2e.ts) that captures test events, and a server-side part (registered in cypress.config.ts) that generates the HTML file with charts, embedded screenshots, and test details.",
     "cypress-mochawesome-reporter": "^3.8.2",
+
+    "_cypress_parallel_description": "Splits spec files across multiple processes for parallel execution. Unlike Cypress Cloud's built-in parallelization (which requires a paid subscription), this package runs locally by distributing spec files across threads.",
     "cypress-parallel": "^0.14.0",
+
+    "_typescript_description": "The TypeScript compiler that adds static type checking to JavaScript. All test files, page objects, and config files are written in TypeScript (.ts). Version ~5.7.0 pins to the 5.7.x range.",
     "typescript": "~5.7.0",
+
+    "_eslint_plugin_description": "ESLint plugin that provides TypeScript-specific linting rules. Works with the parser below to understand TypeScript syntax and enforce rules like no-explicit-any, explicit-function-return-type, and no-unused-vars with TypeScript awareness.",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
+
+    "_eslint_parser_description": "Replaces ESLint's default JavaScript parser with one that understands TypeScript syntax (interfaces, type annotations, generics, enums). Without this, ESLint would report syntax errors on every TypeScript-specific line.",
     "@typescript-eslint/parser": "^8.0.0",
+
+    "_eslint_description": "The core ESLint static analysis engine. Reads .eslintrc.json for configuration, uses the parser and plugins above, and checks all TypeScript files for code quality issues.",
     "eslint": "^8.57.0",
+
+    "_eslint_plugin_cypress_description": "ESLint plugin with Cypress-specific rules. Prevents common mistakes like using cy.wait() with arbitrary timeouts (use intercepts instead), and ensures assertions are used correctly with Cypress commands.",
     "eslint-plugin-cypress": "^3.6.0",
+
+    "_mochawesome_merge_description": "CLI tool to merge multiple Mochawesome JSON report files into one. Originally used in the cy:report:merge script, but no longer needed because cypress-mochawesome-reporter handles merging internally. Kept as a dependency for potential manual report processing.",
     "mochawesome-merge": "^4.3.0",
+
+    "_mochawesome_report_generator_description": "Generates HTML reports from Mochawesome JSON data. Originally used in the cy:report:generate script (via the 'marge' CLI command). Like mochawesome-merge, this is no longer actively used because cypress-mochawesome-reporter generates reports directly, but kept as a dependency.",
     "mochawesome-report-generator": "^6.2.0"
   }
 }

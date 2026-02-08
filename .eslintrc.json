@@ -1,34 +1,69 @@
 {
+  "_fileDescription": "ESLint configuration for the Cypress test framework. ESLint is a static analysis tool that checks your TypeScript code for common errors, style violations, and potential bugs WITHOUT running the code. Run 'npm run lint' to check for issues or 'npm run lint:fix' to automatically fix what it can. This file controls which rules ESLint enforces and how it parses TypeScript files.",
+
+  "_root_description": "When set to true, ESLint stops looking for configuration files in parent directories. Without this, ESLint would merge this config with any .eslintrc files found in parent folders (like your home directory), which could introduce unexpected rules.",
   "root": true,
+
+  "_parser_description": "Tells ESLint to use the TypeScript parser instead of the default JavaScript parser. The default parser doesn't understand TypeScript syntax (interfaces, type annotations, generics, enums), so without this, ESLint would report false errors on every TypeScript-specific line of code.",
   "parser": "@typescript-eslint/parser",
+
+  "_parserOptions_description": "Configuration for the TypeScript parser. ecmaVersion: 2021 allows modern JavaScript syntax. sourceType: 'module' enables import/export statements. project: './tsconfig.json' tells the parser to use the TypeScript configuration for type-aware linting rules (rules that need to understand types, not just syntax).",
   "parserOptions": {
     "ecmaVersion": 2021,
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
+
+  "_plugins_description": "ESLint plugins that provide additional rules beyond the built-in set. @typescript-eslint adds TypeScript-specific rules (type checking, naming conventions). cypress adds Cypress-specific rules (no unnecessary waits, proper assertion usage).",
   "plugins": [
     "@typescript-eslint",
     "cypress"
   ],
+
+  "_extends_description": "Predefined rule sets that this configuration inherits from. 'eslint:recommended' enables core JavaScript rules (no-undef, no-unused-vars, etc.). 'plugin:@typescript-eslint/recommended' enables TypeScript best practices. 'plugin:cypress/recommended' enables Cypress-specific rules like no-unnecessary-waiting. Rules defined in the 'rules' section below can override these inherited rules.",
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:cypress/recommended"
   ],
+
+  "_env_description": "Tells ESLint which global variables exist in the runtime environment so it doesn't report them as undefined. 'cypress/globals' registers cy, Cypress, describe, it, expect, beforeEach, etc. as valid globals. 'node' registers require, module, process, etc. for the config files.",
   "env": {
     "cypress/globals": true,
     "node": true
   },
+
+  "_rules_description": "Individual rule overrides. Each rule is set to 'off', 'warn', or 'error'. 'error' fails the lint check and exits with code 1. 'warn' shows a warning but doesn't fail. Rules below are tuned for a Cypress + TypeScript test framework.",
   "rules": {
+
+    "_no-unused-vars_description": "Flags variables that are declared but never used. Set to 'error' to catch dead code. The argsIgnorePattern '^_' allows function parameters prefixed with underscore (e.g., _unused) to be intentionally unused without triggering the error. Common in callbacks where you need to accept a parameter for positional reasons but don't use it.",
     "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+
+    "_explicit-function-return-type_description": "Warns when a function doesn't have an explicit return type annotation. For example, 'function foo() { return 1; }' would warn because it should be 'function foo(): number { return 1; }'. Set to 'warn' (not error) because Cypress command callbacks and test functions often have obvious return types.",
     "@typescript-eslint/explicit-function-return-type": "warn",
+
+    "_no-explicit-any_description": "Forbids using the 'any' type, which disables all type checking for that variable. Using 'any' defeats the purpose of TypeScript. Set to 'error' to enforce proper typing throughout. Use 'unknown' if you truly don't know the type.",
     "@typescript-eslint/no-explicit-any": "error",
+
+    "_no-non-null-assertion_description": "Forbids the non-null assertion operator (variable!). This operator tells TypeScript 'trust me, this is not null/undefined' which can cause runtime errors if you're wrong. Instead, use proper null checks (if/else, optional chaining) or type guards.",
     "@typescript-eslint/no-non-null-assertion": "error",
+
+    "_no-console_description": "Warns when console.log(), console.warn(), etc. are used. In test code, console statements are usually leftover debugging and should be removed before committing. Set to 'warn' so it doesn't block the lint check but still flags them.",
     "no-console": "warn",
+
+    "_prefer-const_description": "Requires 'const' for variables that are never reassigned. If you declare 'let x = 5' and never change x, this rule errors and tells you to use 'const x = 5'. Const signals intent: 'this value will not change.'",
     "prefer-const": "error",
+
+    "_no-var_description": "Forbids the 'var' keyword entirely. 'var' has function-scoping and hoisting behavior that leads to bugs. Always use 'const' (preferred) or 'let' (when reassignment is needed) which have block-scoping.",
     "no-var": "error",
+
+    "_eqeqeq_description": "Requires strict equality operators (=== and !==) instead of loose equality (== and !=). Loose equality performs type coercion which causes unexpected behavior: '0' == false is true, '' == 0 is true, null == undefined is true. Strict equality compares both value AND type.",
     "eqeqeq": ["error", "always"],
+
+    "_curly_description": "Requires curly braces around ALL control flow bodies (if, else, for, while), even single-line statements. Without this, 'if (x) doSomething()' is allowed, which can lead to bugs when adding a second line that looks indented but isn't actually inside the if block.",
     "curly": ["error", "all"],
+
+    "_max-len_description": "Warns when a line exceeds 120 characters. Long lines are hard to read and review. Set to 'warn' (not error) for flexibility. ignoreStrings and ignoreTemplateLiterals exempt string literals and template strings from the limit because breaking them across lines can reduce readability.",
     "max-len": ["warn", { "code": 120, "ignoreStrings": true, "ignoreTemplateLiterals": true }]
   }
 }

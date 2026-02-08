@@ -1,4 +1,23 @@
 {
+  "_fileDescription": "TypeScript compiler configuration for the Cypress test framework. Controls how TypeScript compiles .ts files, which type checking rules are enforced, and where TypeScript looks for files. Cypress uses this file automatically when it processes TypeScript test files. You can run 'npm run typecheck' to validate all TypeScript files without producing output (noEmit: true).",
+
+  "_compilerOptions_guide": {
+    "target": "ES2021 - The JavaScript version TypeScript compiles down to. ES2021 allows modern syntax like optional chaining (?.), nullish coalescing (??), and Promise.allSettled(). Cypress runs tests in modern browsers that support ES2021 natively.",
+    "lib": "['ES2021', 'DOM', 'DOM.Iterable'] - Type definitions for built-in APIs. ES2021 provides core JS types. DOM and DOM.Iterable provide browser API types (document, window, HTMLElement, NodeList.forEach) needed because Cypress tests interact with the browser DOM.",
+    "module": "commonjs - The module system for output. Uses require()/module.exports syntax which Node.js and Cypress's test runner expect. If set to 'esnext', the require() call in cypress.config.ts setupNodeEvents would break.",
+    "moduleResolution": "node - How TypeScript resolves import paths. Mimics Node.js resolution: looks in node_modules, resolves index files, follows package.json 'main' fields.",
+    "strict": "true - Enables ALL strict type-checking: strictNullChecks, strictFunctionTypes, noImplicitAny, noImplicitThis, etc. Catches more bugs at compile time but requires precise type annotations.",
+    "esModuleInterop": "true - Compatibility between CommonJS (require) and ES modules (import). Allows 'import X from ...' syntax for CommonJS packages like Cypress.",
+    "skipLibCheck": "true - Skips type checking of .d.ts files in node_modules. Speeds up compilation. Your own type errors are still caught.",
+    "forceConsistentCasingInFileNames": "true - Prevents importing the same file with different casing. On macOS both './LoginPage' and './loginPage' resolve the same, but on Linux (CI) they would be different files.",
+    "resolveJsonModule": "true - Allows importing .json files with 'import data from ./file.json'. TypeScript infers the JSON structure as a type. This project uses cy.fixture() instead, but enabled for flexibility.",
+    "isolatedModules": "true - Each file compiles independently. Required by build tools like esbuild that process files one at a time.",
+    "noEmit": "true - TypeScript only type-checks, no JS output. Cypress's bundler handles actual compilation. Makes 'npm run typecheck' a pure validation step.",
+    "types": "['cypress', 'node'] - Global type packages. 'cypress' provides cy, Cypress, describe, it, expect types. 'node' provides require, process, Buffer types for cypress.config.ts.",
+    "baseUrl": "'. (project root)' - Root for resolving path aliases defined in 'paths'.",
+    "paths": "Aliases like @pages/* -> cypress/pages/*. Defined but not currently used -- imports use relative paths. Available for shorter imports in the future."
+  },
+
   "compilerOptions": {
     "target": "ES2021",
     "lib": ["ES2021", "DOM", "DOM.Iterable"],
@@ -19,10 +38,14 @@
       "@support/*": ["cypress/support/*"]
     }
   },
+
+  "_include_description": "Glob patterns specifying which files TypeScript compiles and type-checks. 'cypress/**/*.ts' covers all .ts files in the cypress directory (tests, pages, support). 'cypress.config.ts' includes the config file. Files not matching are ignored.",
   "include": [
     "cypress/**/*.ts",
     "cypress.config.ts"
   ],
+
+  "_exclude_description": "Directories excluded from compilation. node_modules is excluded because third-party packages handle their own compilation. Also improves performance.",
   "exclude": [
     "node_modules"
   ]
