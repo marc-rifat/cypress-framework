@@ -9,7 +9,6 @@ cypress/reports/
 cypress/downloads/
 
 # Environment and credentials
-cypress.env.json
 .env
 .env.*
 !.env.example
