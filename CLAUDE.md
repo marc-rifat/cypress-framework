@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Only **commit** when the user explicitly asks to commit. Never commit proactively.
 - Only **push** when the user explicitly asks to push. Never push proactively.
 - Never add a co-author tag (Co-Authored-By) to commit messages.
+- Always write **detailed commit messages**: use a concise subject line following Conventional Commits format (feat/fix/docs/chore), followed by a blank line and a body that explains **what** changed, **why** it changed, and lists specific files or areas affected. The body should be thorough enough that someone reading the git log can understand the full scope of the change without looking at the diff.
 
 ## Commands
 
@@ -80,4 +81,4 @@ npm run cy:report               # Opens the Mochawesome HTML report in browser
 
 ## CI/CD
 
-GitHub Actions (`.github/workflows/cypress-tests.yml`) runs on push to `main`/`develop` and PRs to `main`. Matrix strategy across Chrome, Firefox, Edge with `fail-fast: false`. Firefox is pinned to version 131 via `browser-actions/setup-firefox` to avoid CDP connection failures with newer Firefox versions. Uploads screenshots (on failure), videos, and Mochawesome reports as artifacts.
+GitHub Actions (`.github/workflows/cypress-tests.yml`) runs on push to `main` and via manual dispatch from the Actions tab. Matrix strategy across Chrome, Firefox, Edge with `fail-fast: false`. Firefox is pinned to version 131 via `browser-actions/setup-firefox` to avoid CDP connection failures with newer Firefox versions. Uploads screenshots (on failure), videos, and Mochawesome reports as artifacts.
