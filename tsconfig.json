@@ -30,7 +30,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "types": ["cypress", "node"],
+    "types": ["cypress", "node", "@4tw/cypress-drag-drop"],
     "baseUrl": ".",
     "paths": {
       "@pages/*": ["cypress/pages/*"],

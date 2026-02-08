@@ -1,0 +1,33 @@
+{
+  "_fileDescription": "Expected text strings and element data for drag-and-drop E2E tests. Tests load this file via cy.fixture('drag-drop') and compare these values against actual page content. The drag-and-drop page at /drag_and_drop has two columns labeled A and B inside a #columns container. Dragging one column onto the other swaps their text content. Columns have no individual IDs -- they are identified by their position (first-child vs last-child).",
+
+  "_pageHeading_description": "The h3 heading text on the /drag_and_drop page. Note this page uses h3 (not h2 like the login page).",
+  "pageHeading": "Drag and Drop",
+
+  "_columnA_description": "The text content of the first (left) column in its initial state before any drag operations.",
+  "columnA": "A",
+
+  "_columnB_description": "The text content of the second (right) column in its initial state before any drag operations.",
+  "columnB": "B",
+
+  "_containerSelector_description": "The CSS selector for the container div that holds both draggable columns.",
+  "containerSelector": "#columns",
+
+  "_columnSelector_description": "The CSS selector matching both column elements. Each column has the 'column' class.",
+  "columnSelector": ".column",
+
+  "_headingSelector_description": "The CSS selector for the page heading element.",
+  "headingSelector": "h3",
+
+  "_columnCount_description": "The expected number of draggable columns on the page.",
+  "columnCount": 2,
+
+  "_draggableAttribute_description": "The HTML attribute that makes elements draggable. Both columns have draggable='true' set by the application's JavaScript.",
+  "draggableAttribute": "draggable",
+
+  "_columnClass_description": "The CSS class name applied to each individual column element.",
+  "columnClass": "column",
+
+  "_url_description": "The URL path for the drag-and-drop page, relative to baseUrl.",
+  "url": "/drag_and_drop"
+}

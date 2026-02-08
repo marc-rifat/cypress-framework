@@ -94,5 +94,21 @@ declare namespace Cypress {
      * @returns Chainable<void> - Can be chained but doesn't yield a specific value
      */
     verifyFlashClass(expectedClass: string): Chainable<void>;
+
+    /**
+     * Custom command: Performs an HTML5 drag-and-drop operation by dispatching
+     * native drag events (dragstart, dragover, drop, dragend) with a real
+     * DataTransfer object. This is a fallback for pages where the
+     * @4tw/cypress-drag-drop plugin's synthetic events don't trigger the
+     * application's JavaScript handlers.
+     *
+     * Implementation: cypress/support/commands.ts
+     * Usage example: cy.dragAndDrop('#column-a', '#column-b')
+     *
+     * @param sourceSelector - CSS selector for the element to drag FROM
+     * @param targetSelector - CSS selector for the element to drag TO
+     * @returns Chainable<void> - Can be chained but doesn't yield a specific value
+     */
+    dragAndDrop(sourceSelector: string, targetSelector: string): Chainable<void>;
   }
 }

@@ -49,37 +49,31 @@
     "typecheck": "tsc --noEmit"
   },
 
-  "_devDependencies_description": "All packages needed for development and testing. 'devDependencies' means they are NOT included in production builds (not relevant here since this is a test framework, but it's the correct category). The ~ prefix (e.g., ~13.17.0) allows patch updates only (13.17.x). The ^ prefix (e.g., ^3.8.2) allows minor and patch updates (3.x.x).",
+  "_devDependencies_description": {
+    "overview": "All packages needed for development and testing. 'devDependencies' means they are NOT included in production builds (not relevant here since this is a test framework, but it's the correct category). The ~ prefix (e.g., ~13.17.0) allows patch updates only (13.17.x). The ^ prefix (e.g., ^3.8.2) allows minor and patch updates (3.x.x).",
+    "cypress": "The core Cypress testing framework. Provides the cy object, browser automation, assertion library, Test Runner GUI, and CLI. Version ~13.17.0 pins to the 13.17.x range.",
+    "cypress-mochawesome-reporter": "Replaces Cypress's default terminal output with rich HTML reports. Has two components: a browser-side part (registered in e2e.ts) that captures test events, and a server-side part (registered in cypress.config.ts) that generates the HTML file with charts, embedded screenshots, and test details.",
+    "cypress-parallel": "Splits spec files across multiple processes for parallel execution. Unlike Cypress Cloud's built-in parallelization (which requires a paid subscription), this package runs locally by distributing spec files across threads.",
+    "typescript": "The TypeScript compiler that adds static type checking to JavaScript. All test files, page objects, and config files are written in TypeScript (.ts). Version ~5.7.0 pins to the 5.7.x range.",
+    "@typescript-eslint/eslint-plugin": "ESLint plugin that provides TypeScript-specific linting rules. Works with the parser below to understand TypeScript syntax and enforce rules like no-explicit-any, explicit-function-return-type, and no-unused-vars with TypeScript awareness.",
+    "@typescript-eslint/parser": "Replaces ESLint's default JavaScript parser with one that understands TypeScript syntax (interfaces, type annotations, generics, enums). Without this, ESLint would report syntax errors on every TypeScript-specific line.",
+    "eslint": "The core ESLint static analysis engine. Reads .eslintrc.json for configuration, uses the parser and plugins above, and checks all TypeScript files for code quality issues.",
+    "eslint-plugin-cypress": "ESLint plugin with Cypress-specific rules. Prevents common mistakes like using cy.wait() with arbitrary timeouts (use intercepts instead), and ensures assertions are used correctly with Cypress commands.",
+    "mochawesome-merge": "CLI tool to merge multiple Mochawesome JSON report files into one. Originally used in the cy:report:merge script, but no longer needed because cypress-mochawesome-reporter handles merging internally. Kept as a dependency for potential manual report processing.",
+    "mochawesome-report-generator": "Generates HTML reports from Mochawesome JSON data. Originally used in the cy:report:generate script (via the 'marge' CLI command). Like mochawesome-merge, this is no longer actively used because cypress-mochawesome-reporter generates reports directly, but kept as a dependency.",
+    "@4tw/cypress-drag-drop": "Provides drag-and-drop support for Cypress tests. Cypress cannot natively trigger HTML5 drag events because it does not create real DataTransfer objects. This plugin registers .drag() and .move() commands that synthesize the full sequence of dragstart, drag, dragover, drop, and dragend events on DOM elements."
+  },
   "devDependencies": {
-
-    "_cypress_description": "The core Cypress testing framework. Provides the cy object, browser automation, assertion library, Test Runner GUI, and CLI. Version ~13.17.0 pins to the 13.17.x range.",
     "cypress": "~13.17.0",
-
-    "_cypress_mochawesome_reporter_description": "Replaces Cypress's default terminal output with rich HTML reports. Has two components: a browser-side part (registered in e2e.ts) that captures test events, and a server-side part (registered in cypress.config.ts) that generates the HTML file with charts, embedded screenshots, and test details.",
     "cypress-mochawesome-reporter": "^3.8.2",
-
-    "_cypress_parallel_description": "Splits spec files across multiple processes for parallel execution. Unlike Cypress Cloud's built-in parallelization (which requires a paid subscription), this package runs locally by distributing spec files across threads.",
     "cypress-parallel": "^0.14.0",
-
-    "_typescript_description": "The TypeScript compiler that adds static type checking to JavaScript. All test files, page objects, and config files are written in TypeScript (.ts). Version ~5.7.0 pins to the 5.7.x range.",
     "typescript": "~5.7.0",
-
-    "_eslint_plugin_description": "ESLint plugin that provides TypeScript-specific linting rules. Works with the parser below to understand TypeScript syntax and enforce rules like no-explicit-any, explicit-function-return-type, and no-unused-vars with TypeScript awareness.",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
-
-    "_eslint_parser_description": "Replaces ESLint's default JavaScript parser with one that understands TypeScript syntax (interfaces, type annotations, generics, enums). Without this, ESLint would report syntax errors on every TypeScript-specific line.",
     "@typescript-eslint/parser": "^8.0.0",
-
-    "_eslint_description": "The core ESLint static analysis engine. Reads .eslintrc.json for configuration, uses the parser and plugins above, and checks all TypeScript files for code quality issues.",
     "eslint": "^8.57.0",
-
-    "_eslint_plugin_cypress_description": "ESLint plugin with Cypress-specific rules. Prevents common mistakes like using cy.wait() with arbitrary timeouts (use intercepts instead), and ensures assertions are used correctly with Cypress commands.",
     "eslint-plugin-cypress": "^3.6.0",
-
-    "_mochawesome_merge_description": "CLI tool to merge multiple Mochawesome JSON report files into one. Originally used in the cy:report:merge script, but no longer needed because cypress-mochawesome-reporter handles merging internally. Kept as a dependency for potential manual report processing.",
     "mochawesome-merge": "^4.3.0",
-
-    "_mochawesome_report_generator_description": "Generates HTML reports from Mochawesome JSON data. Originally used in the cy:report:generate script (via the 'marge' CLI command). Like mochawesome-merge, this is no longer actively used because cypress-mochawesome-reporter generates reports directly, but kept as a dependency.",
-    "mochawesome-report-generator": "^6.2.0"
+    "mochawesome-report-generator": "^6.2.0",
+    "@4tw/cypress-drag-drop": "^2.2.5"
   }
 }

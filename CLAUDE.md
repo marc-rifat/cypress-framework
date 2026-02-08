@@ -21,9 +21,13 @@ npm run cy:run:all-browsers     # Chrome + Firefox + Edge sequentially
 npm run cy:run:parallel         # 3 threads across spec files
 npm run cy:run:parallel:chrome  # Parallel in Chrome
 
-# Run a single spec
+# Run a single spec or directory
 npx cypress run --spec "cypress/e2e/login/login.cy.ts"
 npx cypress run --browser chrome --spec "cypress/e2e/login/login-negative.cy.ts"
+npx cypress run --browser chrome --spec "cypress/e2e/drag-drop/*.cy.ts"
+
+# Run tests in headed mode (visible browser window)
+npx cypress run --browser chrome --headed --spec "cypress/e2e/drag-drop/*.cy.ts"
 
 # Interactive mode
 npm run cy:open
@@ -44,21 +48,30 @@ npm run cy:report               # Opens the Mochawesome HTML report in browser
 - `BasePage` (abstract) -- provides `visit()`, `verifyUrlContains()`, `isElementVisible()`, `getPageTitle()`. Each subclass declares its own `url` property.
 - `LoginPage extends BasePage` -- selectors in a `SELECTORS` const object, element access via TypeScript getters (`usernameInput`, `passwordInput`, `submitButton`, `flashMessage`, `heading`, `subheading`). Action methods: `login()`, `typeUsername()`, `typePassword()`, `clickSubmit()`, `submitWithEnterKey()`. Assertion methods: `verifyFlashMessage()`, `verifyFlashClass()`, `verifyPageLoaded()`, `verifyFormAttributes()`.
 - `SecureAreaPage extends BasePage` -- logout and flash message interaction for the authenticated `/secure` page.
+- `DragDropPage extends BasePage` -- selectors for `#columns` container and column elements identified by position (`:first-child` / `:last-child`). Getters: `container`, `firstColumn`, `lastColumn`, `allColumns`, `heading`. Drag actions: `dragFirstToLast()`, `dragLastToFirst()` (both use custom `cy.dragAndDrop()` with native DragEvent dispatch). Assertions: `verifyColumnOrder()`, `verifyPageLoaded()`, `verifyColumnsVisible()`.
 
-**Test specs** are in `cypress/e2e/login/` (3 files, 38 tests):
+**Test specs** are in `cypress/e2e/` (5 files, 72 tests):
+
+Login tests (`cypress/e2e/login/`, 3 files, 38 tests):
 - `login.cy.ts` -- positive auth flows and lifecycle (6 tests)
 - `login-negative.cy.ts` -- invalid credentials, empty fields, security inputs (SQLi, XSS), boundary cases, data-driven case sensitivity (13 tests)
 - `login-ui.cy.ts` -- form elements, attributes, input behavior, keyboard nav, URL validation (19 tests)
 
-**Custom Cypress commands** (`cypress/support/commands.ts`): `cy.login()`, `cy.logout()`, `cy.verifyFlashMessage()`, `cy.verifyFlashClass()`. Type declarations in `cypress/support/types/cypress.d.ts` extending `Cypress.Chainable`.
+Drag-and-drop tests (`cypress/e2e/drag-drop/`, 2 files, 34 tests):
+- `drag-drop.cy.ts` -- initial state, single swaps, multiple swaps with even/odd cycle verification (10 tests)
+- `drag-drop-ui.cy.ts` -- page elements, element attributes, column structure/content, URL stability, visual state after drag (24 tests)
 
-**Test data** is externalized in fixtures: `users.json` (credential sets including edge cases) and `messages.json` (expected flash messages and page text).
+**Custom Cypress commands** (`cypress/support/commands.ts`): `cy.login()`, `cy.logout()`, `cy.verifyFlashMessage()`, `cy.verifyFlashClass()`, `cy.dragAndDrop()`. The `@4tw/cypress-drag-drop` plugin is also imported (registers `.drag()` and `.move()`). Type declarations in `cypress/support/types/cypress.d.ts` extending `Cypress.Chainable`.
+
+**Test data** is externalized in fixtures: `users.json` (credential sets including edge cases), `messages.json` (expected flash messages and page text), and `drag-drop.json` (expected column text, selectors, attributes).
 
 ## Key Conventions
 
 - **Credentials**: stored in `cypress.env.json` (committed to repo), accessed via `Cypress.env('LOGIN_USERNAME')`. Can be overridden with `CYPRESS_` prefixed environment variables. In CI, also injected from GitHub repository secrets.
-- **Selectors**: defined as `const SELECTORS = { ... } as const` at top of each page object file. Use semantic selectors (`#username`, `#flash`, `button[type="submit"]`).
-- **Element getters**: use TypeScript `get` accessors returning `Cypress.Chainable<JQuery<HTMLElement>>` (or `HTMLHeadingElement` for `h2` elements).
+- **Selectors**: defined as `const SELECTORS = { ... } as const` at top of each page object file. Use semantic selectors (`#username`, `#flash`, `button[type="submit"]`). For the drag-drop page, columns are identified by position (`:first-child` / `:last-child`) because the page swaps innerHTML rather than moving DOM nodes.
+- **Element getters**: use TypeScript `get` accessors returning `Cypress.Chainable<JQuery<HTMLElement>>` (or `HTMLHeadingElement` for heading elements).
+- **Drag-and-drop**: The custom `cy.dragAndDrop(source, target)` command dispatches real native `DragEvent` instances via `element.dispatchEvent()` with a shared `DataTransfer` object and `setData('text/html', ...)`. The `@4tw/cypress-drag-drop` plugin's `.drag()` command does not work on the herokuapp `/drag_and_drop` page because the plugin detects drop success by checking bounding rect changes, but this page only swaps innerHTML without moving DOM nodes.
+- **Container visibility**: The `#columns` container on `/drag_and_drop` has 0px computed height due to floated children. Use `should('exist')` instead of `should('be.visible')` for container assertions.
 - **Uncaught exceptions**: `e2e.ts` suppresses known herokuapp errors (`Cannot read properties of null`, `Script error`) to prevent false test failures.
 - **ESLint**: strict TypeScript rules -- `no-explicit-any` is error, `explicit-function-return-type` is warn, max line length 120. The `require()` call in `cypress.config.ts` setupNodeEvents needs `@typescript-eslint/no-require-imports` disable comment.
 - **Retries**: 2 in `runMode`, 0 in `openMode`.
