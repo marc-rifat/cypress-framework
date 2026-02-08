@@ -1,70 +1,97 @@
 {
+  "_fileDescription": "Test credential sets for login page E2E tests. Each key represents a specific test scenario with a username/password pair. Tests load this file via cy.fixture('users') and access entries like users.validUser.username. JSON does not support comments, so _description fields are used instead. These extra fields are ignored by the tests since they only access known property names.",
+
   "validUser": {
+    "_description": "Correct credentials that should successfully authenticate. Used in positive flow tests (login.cy.ts) to verify login works, and in some negative tests as a baseline. The username 'tomsmith' and password 'SuperSecretPassword!' are the real credentials for the-internet.herokuapp.com/login.",
     "username": "tomsmith",
     "password": "SuperSecretPassword!"
   },
+
   "invalidUsername": {
+    "_description": "Wrong username paired with the correct password. Used in login-negative.cy.ts to verify the app shows 'Your username is invalid!' error. The server validates username first, so this triggers a username-specific error message.",
     "username": "invaliduser",
     "password": "SuperSecretPassword!"
   },
+
   "invalidPassword": {
+    "_description": "Correct username paired with a wrong password. Used in login-negative.cy.ts to verify the app shows 'Your password is invalid!' error. Since the username is valid, the server proceeds to password validation and returns a password-specific error.",
     "username": "tomsmith",
     "password": "WrongPassword123"
   },
+
   "bothInvalid": {
+    "_description": "Both username and password are wrong. Used in login-negative.cy.ts to verify the app shows the 'invalid username' error (not password error), because the server checks username before password. This confirms error priority behavior.",
     "username": "wronguser",
     "password": "wrongpassword"
   },
+
   "emptyCredentials": {
+    "_description": "Both fields are empty strings. Defined here for completeness but the empty field tests in login-negative.cy.ts typically submit the form without typing (clickSubmit with no input) or type only one field, rather than using this fixture entry directly.",
     "username": "",
     "password": ""
   },
+
   "sqlInjection": {
+    "_description": "SQL injection payload used in login-negative.cy.ts security tests. The string ' OR '1'='1 is a classic SQL injection that, in a vulnerable app, would bypass authentication by making the SQL WHERE clause always evaluate to true. The test verifies the app treats this as a literal string and rejects it with an error.",
     "username": "' OR '1'='1",
     "password": "' OR '1'='1"
   },
+
   "xssAttack": {
+    "_description": "Cross-Site Scripting (XSS) payload used in login-negative.cy.ts security tests. The <script>alert('xss')</script> string would execute JavaScript in the browser if the app renders user input without sanitization. The test verifies login is rejected AND no <script> tags appear in the page DOM.",
     "username": "<script>alert('xss')</script>",
     "password": "<script>alert('xss')</script>"
   },
+
   "longInput": {
+    "_description": "256-character strings used in login-negative.cy.ts boundary tests. Tests that the app handles very long input without crashing, hanging, or producing unexpected behavior. The string is 256 lowercase 'a' characters for both username and password. Note: this test may take longer due to Cypress typing each character individually.",
     "username": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "password": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
   },
+
   "specialCharacters": {
+    "_description": "A string of common special characters used in login-negative.cy.ts boundary tests. Characters like !@#$%^&*() can cause issues with URL encoding, HTML escaping, form parsing, or database queries if not handled properly. The test verifies the app rejects these as invalid credentials without breaking.",
     "username": "!@#$%^&*()_+-=[]{}|;':\",./<>?",
     "password": "!@#$%^&*()_+-=[]{}|;':\",./<>?"
   },
+
   "whitespaceOnly": {
+    "_description": "Three space characters for both fields, used in login-negative.cy.ts boundary tests. Tests whether the app treats whitespace-only input as invalid (it should). A poorly implemented app might trim these to empty strings and crash, or accept them as valid credentials.",
     "username": "   ",
     "password": "   "
   },
+
   "caseSensitivity": [
     {
+      "_description": "Tests that an ALL-UPPERCASE username ('TOMSMITH') is rejected even with the correct password. Verifies the server performs case-sensitive username matching.",
       "description": "uppercase username",
       "username": "TOMSMITH",
       "password": "SuperSecretPassword!",
       "shouldFail": true
     },
     {
+      "_description": "Tests that a mixed-case username ('TomSmith') is rejected even with the correct password. Verifies partial case changes are also caught.",
       "description": "mixed case username",
       "username": "TomSmith",
       "password": "SuperSecretPassword!",
       "shouldFail": true
     },
     {
+      "_description": "Tests that an ALL-UPPERCASE password ('SUPERSECRETPASSWORD!') is rejected with the correct username. Verifies the server performs case-sensitive password matching.",
       "description": "uppercase password",
       "username": "tomsmith",
       "password": "SUPERSECRETPASSWORD!",
       "shouldFail": true
     },
     {
+      "_description": "Tests that an all-lowercase password ('supersecretpassword!') is rejected with the correct username. The real password has mixed case, so this variation should fail.",
       "description": "lowercase password",
       "username": "tomsmith",
       "password": "supersecretpassword!",
       "shouldFail": true
     },
     {
+      "_description": "Baseline entry with the exact correct credentials. Included in the case sensitivity array to confirm that the test loop itself works -- at least one entry must pass. shouldFail=false means the test expects a successful login, then logs out to continue the loop.",
       "description": "valid credentials (baseline)",
       "username": "tomsmith",
       "password": "SuperSecretPassword!",

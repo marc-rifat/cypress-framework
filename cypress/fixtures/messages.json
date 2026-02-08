@@ -1,9 +1,26 @@
 {
+  "_fileDescription": "Expected text strings for assertion comparisons in login E2E tests. Tests load this file via cy.fixture('messages') and compare these values against actual page content using methods like verifyFlashMessage(messages.loginSuccess). Centralizing expected text here means if the app's messages change, you only update this file instead of every test. JSON does not support comments, so _description fields document each entry.",
+
+  "_flashMessageNote": "Flash messages are the colored banners that appear at the top of the page after login/logout actions. Green banners have CSS class 'success', red banners have CSS class 'error'. The flash element's HTML id is '#flash'. Messages are checked using .should('contain.text', ...) which does substring matching, so minor whitespace differences are tolerated.",
+
+  "_loginSuccess_description": "The success flash message shown on the /secure page after a valid login. Displayed in a green banner with CSS class 'success'. Used in login.cy.ts positive flow tests and login-ui.cy.ts keyboard navigation test.",
   "loginSuccess": "You logged into a secure area!",
+
+  "_logoutSuccess_description": "The success flash message shown on the /login page after clicking the logout button from /secure. Displayed in a green banner with CSS class 'success'. Used in login.cy.ts logout flow tests.",
   "logoutSuccess": "You logged out of the secure area!",
+
+  "_invalidUsername_description": "The error flash message shown when the submitted username does not exist in the system. Displayed in a red banner with CSS class 'error'. Also shown when both fields are empty (server validates username first). Used extensively in login-negative.cy.ts.",
   "invalidUsername": "Your username is invalid!",
+
+  "_invalidPassword_description": "The error flash message shown when the username is valid but the password is wrong. Displayed in a red banner with CSS class 'error'. Only appears when the username passes validation but the password fails. Used in login-negative.cy.ts.",
   "invalidPassword": "Your password is invalid!",
+
+  "_secureAreaHeading_description": "The h2 heading text on the /secure page (the page shown after successful login). Used by SecureAreaPage.verifyPageLoaded() to confirm the authenticated page rendered correctly.",
   "secureAreaHeading": "Secure Area",
+
+  "_loginPageHeading_description": "The h2 heading text on the /login page. Used in login-ui.cy.ts 'Page Elements Presence' tests to verify the correct heading is displayed.",
   "loginPageHeading": "Login Page",
+
+  "_loginPageSubheading_description": "The instructional text shown below the heading on the /login page. Tells users which credentials to use for the demo app. Used in login-ui.cy.ts to verify the subheading content is present and correct.",
   "loginPageSubheading": "This is where you can log into the secure area. Enter tomsmith for the username and SuperSecretPassword! for the password. If the information is wrong you should see error messages."
 }
