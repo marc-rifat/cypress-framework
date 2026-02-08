@@ -28,7 +28,7 @@ export default defineConfig({
       embeddedScreenshots: true,
       inlineAssets: true,
       saveAllAttempts: false,
-      overwrite: false,
+      overwrite: true,
       html: true,
       json: true,
     },
