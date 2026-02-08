@@ -1,0 +1,9 @@
+{
+  "loginSuccess": "You logged into a secure area!",
+  "logoutSuccess": "You logged out of the secure area!",
+  "invalidUsername": "Your username is invalid!",
+  "invalidPassword": "Your password is invalid!",
+  "secureAreaHeading": "Secure Area",
+  "loginPageHeading": "Login Page",
+  "loginPageSubheading": "This is where you can log into the secure area. Enter tomsmith for the username and SuperSecretPassword! for the password. If the information is wrong you should see error messages."
+}

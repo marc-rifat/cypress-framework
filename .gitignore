@@ -1,0 +1,60 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Cypress test artifacts
+cypress/screenshots/
+cypress/videos/
+cypress/reports/
+cypress/downloads/
+
+# Environment and credentials
+cypress.env.json
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime and cache
+.cache/
+.eslintcache
+.npm/
+tmp/
+temp/
+
+# Coverage
+coverage/
+*.lcov
+.nyc_output/

@@ -1,0 +1,74 @@
+{
+  "validUser": {
+    "username": "tomsmith",
+    "password": "SuperSecretPassword!"
+  },
+  "invalidUsername": {
+    "username": "invaliduser",
+    "password": "SuperSecretPassword!"
+  },
+  "invalidPassword": {
+    "username": "tomsmith",
+    "password": "WrongPassword123"
+  },
+  "bothInvalid": {
+    "username": "wronguser",
+    "password": "wrongpassword"
+  },
+  "emptyCredentials": {
+    "username": "",
+    "password": ""
+  },
+  "sqlInjection": {
+    "username": "' OR '1'='1",
+    "password": "' OR '1'='1"
+  },
+  "xssAttack": {
+    "username": "<script>alert('xss')</script>",
+    "password": "<script>alert('xss')</script>"
+  },
+  "longInput": {
+    "username": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "password": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "specialCharacters": {
+    "username": "!@#$%^&*()_+-=[]{}|;':\",./<>?",
+    "password": "!@#$%^&*()_+-=[]{}|;':\",./<>?"
+  },
+  "whitespaceOnly": {
+    "username": "   ",
+    "password": "   "
+  },
+  "caseSensitivity": [
+    {
+      "description": "uppercase username",
+      "username": "TOMSMITH",
+      "password": "SuperSecretPassword!",
+      "shouldFail": true
+    },
+    {
+      "description": "mixed case username",
+      "username": "TomSmith",
+      "password": "SuperSecretPassword!",
+      "shouldFail": true
+    },
+    {
+      "description": "uppercase password",
+      "username": "tomsmith",
+      "password": "SUPERSECRETPASSWORD!",
+      "shouldFail": true
+    },
+    {
+      "description": "lowercase password",
+      "username": "tomsmith",
+      "password": "supersecretpassword!",
+      "shouldFail": true
+    },
+    {
+      "description": "valid credentials (baseline)",
+      "username": "tomsmith",
+      "password": "SuperSecretPassword!",
+      "shouldFail": false
+    }
+  ]
+}
