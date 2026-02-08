@@ -41,7 +41,7 @@ npm install
 
 ## Configuration
 
-Test credentials are externalized in `cypress.env.json` (gitignored for security):
+Test credentials are stored in `cypress.env.json` (committed to the repository):
 
 ```json
 {
@@ -50,7 +50,7 @@ Test credentials are externalized in `cypress.env.json` (gitignored for security
 }
 ```
 
-Create this file locally or set environment variables prefixed with `CYPRESS_` (e.g., `CYPRESS_LOGIN_USERNAME`).
+Cypress automatically loads this file and exposes values via `Cypress.env()`. Credentials can also be overridden with environment variables prefixed with `CYPRESS_` (e.g., `CYPRESS_LOGIN_USERNAME`).
 
 ## Usage
 
@@ -137,9 +137,9 @@ cypress-framework/
 | `package.json` | Defines project dependencies (Cypress, TypeScript, reporters, linters) and npm scripts for running tests across browsers, parallel execution, report generation, linting, and type checking. |
 | `tsconfig.json` | TypeScript compiler configuration with strict mode enabled, path aliases (`@pages/*`, `@fixtures/*`, `@support/*`), and target ES2021. Ensures type safety across all test and page object files. |
 | `cypress.config.ts` | Central Cypress configuration: sets `baseUrl` to the application under test, configures Mochawesome reporter options (charts, embedded screenshots, inline assets), retry strategy (2 retries in CI, 0 in interactive), timeouts (10s command, 30s page load), video recording, and viewport dimensions (1280x720). |
-| `cypress.env.json` | Externalized test credentials (`LOGIN_USERNAME`, `LOGIN_PASSWORD`). Gitignored to prevent secrets from being committed. Cypress automatically loads this file and exposes values via `Cypress.env()`. |
+| `cypress.env.json` | Externalized test credentials (`LOGIN_USERNAME`, `LOGIN_PASSWORD`). Committed to the repository for convenience. Cypress automatically loads this file and exposes values via `Cypress.env()`. Can be overridden with `CYPRESS_` prefixed environment variables. |
 | `.eslintrc.json` | ESLint configuration with TypeScript parser, `@typescript-eslint` plugin for strict typing rules, and `eslint-plugin-cypress` for Cypress-specific best practices (e.g., no unnecessary waits). |
-| `.gitignore` | Excludes `node_modules/`, Cypress artifacts (`screenshots/`, `videos/`, `reports/`), `cypress.env.json` credentials file, IDE files, and OS-specific files from version control. |
+| `.gitignore` | Excludes `node_modules/`, Cypress artifacts (`screenshots/`, `videos/`, `reports/`), IDE files, and OS-specific files from version control. |
 
 ### `.github/workflows/`
 
@@ -153,9 +153,9 @@ This folder contains all test spec files organized by test category. Cypress dis
 
 | File | Tests | Purpose |
 |------|-------|---------|
-| `login.cy.ts` | ~7 | **Core positive flows.** Tests successful login with valid credentials, success message verification, logout button visibility, logout flow with message verification, redirect back to login after logout, and a full authentication lifecycle (login -> secure area -> logout -> re-login). |
-| `login-negative.cy.ts` | ~13 | **Negative and edge cases.** Tests invalid username, invalid password, both invalid, empty fields (all combinations), SQL injection attempt, XSS script injection attempt, extremely long input strings, special characters, whitespace-only input, and data-driven case sensitivity validation using parameterized test data. |
-| `login-ui.cy.ts` | ~15 | **UI validation and navigation.** Tests page heading and subheading text, presence and visibility of all form elements, input field attributes (`type`, `name`), form `action` and `method` attributes, typing and clearing behavior, password masking, keyboard navigation (Enter key submission, Tab between fields), URL correctness, and unauthorized access redirect (`/secure` without auth redirects to `/login`). |
+| `login.cy.ts` | 6 | **Core positive flows.** Tests successful login with valid credentials, success message verification, logout button visibility, logout flow with message verification, redirect back to login after logout, and a full authentication lifecycle (login -> secure area -> logout -> re-login). |
+| `login-negative.cy.ts` | 13 | **Negative and edge cases.** Tests invalid username, invalid password, both invalid, empty fields (all combinations), SQL injection attempt, XSS script injection attempt, extremely long input strings, special characters, whitespace-only input, and data-driven case sensitivity validation using parameterized test data. |
+| `login-ui.cy.ts` | 19 | **UI validation and navigation.** Tests page heading and subheading text, presence and visibility of all form elements, input field attributes (`type`, `name`), form `action` and `method` attributes, typing and clearing behavior, password masking, keyboard navigation (Enter key submission, Tab between fields), URL correctness, and unauthorized access redirect (`/secure` without auth redirects to `/login`). |
 
 ### `cypress/fixtures/` - Test Data
 
@@ -173,7 +173,7 @@ Page Objects encapsulate page-specific selectors, actions, and assertions into r
 | File | Purpose |
 |------|---------|
 | `BasePage.ts` | **Abstract base class** inherited by all page objects. Provides common methods: `visit()` navigates to the page URL, `verifyUrlContains()` asserts URL path fragments, `getCurrentUrl()` returns the current URL, `isElementVisible()` checks element visibility, and `getPageTitle()` returns the document title. Each page object declares its own `url` property. |
-| `LoginPage.ts` | **Login page representation.** Defines private CSS selector constants for all login form elements (`#login`, `#username`, `#password`, `button[type="submit"]`, `#flash`, `h2`, `h4.subheader`). Exposes typed element accessors as getters (`usernameInput`, `passwordInput`, `submitButton`, `flashMessage`, `heading`, `subheading`). Provides action methods (`login()`, `typeUsername()`, `typePassword()`, `clickSubmit()`, `submitWithEnterKey()`) and assertion methods (`verifyFlashMessage()`, `verifyFlashClass()`, `verifyPageLoaded()`, `verifyFormAttributes()`). |
+| `LoginPage.ts` | **Login page representation.** Defines private CSS selector constants for all login form elements (`#login`, `#username`, `#password`, `button[type="submit"]`, `#flash`, `h2`, `h4`). Exposes typed element accessors as getters (`usernameInput`, `passwordInput`, `submitButton`, `flashMessage`, `heading`, `subheading`). Provides action methods (`login()`, `typeUsername()`, `typePassword()`, `clickSubmit()`, `submitWithEnterKey()`) and assertion methods (`verifyFlashMessage()`, `verifyFlashClass()`, `verifyPageLoaded()`, `verifyFormAttributes()`). |
 | `SecureAreaPage.ts` | **Secure area page representation.** Defines selectors for the authenticated page (`h2` heading, `#flash` messages, `a.button[href="/logout"]`). Provides `clickLogout()` action, flash message verification methods, and `verifyPageLoaded()` which asserts both the heading text and logout button visibility. |
 
 ### `cypress/support/` - Framework Infrastructure
@@ -241,7 +241,7 @@ After a test run, Mochawesome HTML reports are generated in `cypress/reports/`. 
 - Charts showing pass/fail distribution
 - Full test output and error messages
 
-To manually merge and generate a combined report:
+To open the report in your browser after a test run:
 
 ```bash
 npm run cy:report

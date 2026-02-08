@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Git Workflow Rules
+
+- Only **commit** when the user explicitly asks to commit. Never commit proactively.
+- Only **push** when the user explicitly asks to push. Never push proactively.
+- Never add a co-author tag (Co-Authored-By) to commit messages.
+
 ## Commands
 
 ```bash
@@ -27,7 +33,7 @@ npm run lint:fix                # ESLint auto-fix
 npm run typecheck               # TypeScript type validation (tsc --noEmit)
 
 # Reports (after test run)
-npm run cy:report               # Merge JSON + generate HTML report
+npm run cy:report               # Opens the Mochawesome HTML report in browser
 ```
 
 ## Architecture
@@ -38,10 +44,10 @@ npm run cy:report               # Merge JSON + generate HTML report
 - `LoginPage extends BasePage` -- selectors in a `SELECTORS` const object, element access via TypeScript getters (`usernameInput`, `passwordInput`, `submitButton`, `flashMessage`, `heading`, `subheading`). Action methods: `login()`, `typeUsername()`, `typePassword()`, `clickSubmit()`, `submitWithEnterKey()`. Assertion methods: `verifyFlashMessage()`, `verifyFlashClass()`, `verifyPageLoaded()`, `verifyFormAttributes()`.
 - `SecureAreaPage extends BasePage` -- logout and flash message interaction for the authenticated `/secure` page.
 
-**Test specs** are in `cypress/e2e/login/` (3 files, ~38 tests):
-- `login.cy.ts` -- positive auth flows and lifecycle
-- `login-negative.cy.ts` -- invalid credentials, empty fields, security inputs (SQLi, XSS), boundary cases, data-driven case sensitivity
-- `login-ui.cy.ts` -- form elements, attributes, input behavior, keyboard nav, URL validation
+**Test specs** are in `cypress/e2e/login/` (3 files, 38 tests):
+- `login.cy.ts` -- positive auth flows and lifecycle (6 tests)
+- `login-negative.cy.ts` -- invalid credentials, empty fields, security inputs (SQLi, XSS), boundary cases, data-driven case sensitivity (13 tests)
+- `login-ui.cy.ts` -- form elements, attributes, input behavior, keyboard nav, URL validation (19 tests)
 
 **Custom Cypress commands** (`cypress/support/commands.ts`): `cy.login()`, `cy.logout()`, `cy.verifyFlashMessage()`, `cy.verifyFlashClass()`. Type declarations in `cypress/support/types/cypress.d.ts` extending `Cypress.Chainable`.
 
@@ -49,13 +55,15 @@ npm run cy:report               # Merge JSON + generate HTML report
 
 ## Key Conventions
 
-- **Credentials**: stored in `cypress.env.json` (gitignored), accessed via `Cypress.env('LOGIN_USERNAME')`. For CI, set as GitHub repository secrets with `CYPRESS_` prefix.
+- **Credentials**: stored in `cypress.env.json` (committed to repo), accessed via `Cypress.env('LOGIN_USERNAME')`. Can be overridden with `CYPRESS_` prefixed environment variables. In CI, also injected from GitHub repository secrets.
 - **Selectors**: defined as `const SELECTORS = { ... } as const` at top of each page object file. Use semantic selectors (`#username`, `#flash`, `button[type="submit"]`).
 - **Element getters**: use TypeScript `get` accessors returning `Cypress.Chainable<JQuery<HTMLElement>>` (or `HTMLHeadingElement` for `h2` elements).
 - **Uncaught exceptions**: `e2e.ts` suppresses known herokuapp errors (`Cannot read properties of null`, `Script error`) to prevent false test failures.
 - **ESLint**: strict TypeScript rules -- `no-explicit-any` is error, `explicit-function-return-type` is warn, max line length 120. The `require()` call in `cypress.config.ts` setupNodeEvents needs `@typescript-eslint/no-require-imports` disable comment.
 - **Retries**: 2 in `runMode`, 0 in `openMode`.
+- **Reporter**: Mochawesome with `overwrite: true` generates a single `index.html` per run. The reporter handles merging internally -- no manual merge step needed.
 - **Path aliases**: `@pages/*`, `@fixtures/*`, `@support/*` defined in tsconfig but not used in imports (standard relative imports used throughout).
+- **tsconfig.json**: Do not add custom keys inside `compilerOptions` -- Cypress's TypeScript processor does not handle unknown keys well and it breaks `require()` in setupNodeEvents.
 
 ## Adding a New Page Object
 
@@ -72,4 +80,4 @@ npm run cy:report               # Merge JSON + generate HTML report
 
 ## CI/CD
 
-GitHub Actions (`.github/workflows/cypress-tests.yml`) runs on push to `main`/`develop` and PRs to `main`. Matrix strategy across Chrome, Firefox, Edge with `fail-fast: false`. Uploads screenshots (on failure), videos, and Mochawesome reports as artifacts.
+GitHub Actions (`.github/workflows/cypress-tests.yml`) runs on push to `main`/`develop` and PRs to `main`. Matrix strategy across Chrome, Firefox, Edge with `fail-fast: false`. Firefox is pinned to version 131 via `browser-actions/setup-firefox` to avoid CDP connection failures with newer Firefox versions. Uploads screenshots (on failure), videos, and Mochawesome reports as artifacts.
