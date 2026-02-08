@@ -27,6 +27,12 @@ jobs:
           node-version: 20
           cache: 'npm'
 
+      - name: Setup Firefox
+        if: matrix.browser == 'firefox'
+        uses: browser-actions/setup-firefox@v1
+        with:
+          firefox-version: '131.0'
+
       - name: Install dependencies
         run: npm ci
 
