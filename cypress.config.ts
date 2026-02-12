@@ -197,9 +197,8 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // Register the Mochawesome reporter's server-side plugin.
       // Uses require() instead of import because setupNodeEvents runs in a
-      // CommonJS context. The eslint-disable comment suppresses the TypeScript
-      // linting rule that prefers import over require.
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      // CommonJS context. The @typescript-eslint/no-require-imports rule is
+      // disabled for this file in eslint.config.mjs.
       require('cypress-mochawesome-reporter/plugin')(on);
       // Return the config object (possibly modified by plugins) so Cypress
       // uses the updated configuration.
