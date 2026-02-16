@@ -1,3 +1,4 @@
+<a id="top"></a>
 # Cypress + TypeScript + Cucumber Cheatsheet
 
 ---
@@ -90,6 +91,8 @@ npx cypress open
 
 ---
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ## Project Configuration
 
 ### tsconfig.json
@@ -150,6 +153,8 @@ export default defineConfig({
 
 ---
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ## Recommended Directory Structure
 
 ```
@@ -171,6 +176,8 @@ cypress/
 ```
 
 ---
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ## Gherkin Syntax (`.feature` files)
 
@@ -228,6 +235,8 @@ Feature: Critical Flows
 ```
 
 ---
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ## Step Definitions
 
@@ -299,6 +308,8 @@ When("the user submits the following JSON:", (docString: string) => {
 
 ---
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ## Page Object Model
 
 ### Page Class
@@ -351,6 +362,8 @@ When("the user enters valid credentials", () => {
 
 ---
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ## Custom Commands (TypeScript)
 
 ### Defining Commands
@@ -392,6 +405,8 @@ When("the user logs in as admin", () => {
 ```
 
 ---
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ## Common Cypress Assertions
 
@@ -439,6 +454,8 @@ cy.location("pathname").should("eq", "/login");
 
 ---
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ## API Testing in Steps
 
 ### Intercept & Stub
@@ -473,6 +490,8 @@ When("the user is created via API", () => {
 
 ---
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ## Hooks (Before / After)
 
 ### Cucumber Hooks
@@ -506,6 +525,8 @@ AfterAll(() => {
 
 ---
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ## CLI Commands
 
 ### Basic Execution
@@ -536,6 +557,8 @@ npx cypress open --component
 
 ---
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ### Headed vs Headless
 
 #### Run all tests in headed mode (visible browser)
@@ -557,6 +580,8 @@ npx cypress run --headless
 ```
 
 ---
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ### Browser Selection
 
@@ -622,6 +647,8 @@ npx cypress run --browser /usr/bin/google-chrome-stable
 
 ---
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ### Running Specific Tests
 
 #### Run a single feature file
@@ -655,6 +682,8 @@ npx cypress run --spec "cypress/e2e/features/login.feature" --headed --browser c
 ```
 
 ---
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ### Tag-Based Execution (Cucumber)
 
@@ -702,6 +731,8 @@ npx cypress run --env tags="@smoke" --headed --browser chrome
 
 ---
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ### Parallel Execution
 
 #### Run tests in parallel with Cypress Cloud
@@ -748,6 +779,8 @@ npx cypress-parallel -s "cypress:run" -t 4 -d "cypress/e2e/features"
 
 ---
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ### Environment Variables
 
 #### Pass a single env variable
@@ -781,6 +814,8 @@ npx cypress run --config baseUrl=http://staging.example.com
 ```
 
 ---
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ### Recording & Reporting
 
@@ -853,6 +888,8 @@ npx marge merged-report.json --reportDir cypress/reports/html
 
 ---
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ### Retry & Timeout
 
 #### Run with retries on failure
@@ -880,6 +917,8 @@ npx cypress run --config pageLoadTimeout=60000
 ```
 
 ---
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ### Housekeeping
 
@@ -927,6 +966,8 @@ npx cypress install --force
 
 ---
 
+[↑ Back to Table of Contents](#table-of-contents)
+
 ### CI Quick-Reference Combos
 
 #### Full headless Chrome run with recording
@@ -960,6 +1001,8 @@ npx cypress run --env tags="@regression",baseUrl=http://staging.example.com --he
 ```
 
 ---
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ## Debugging
 
@@ -1007,6 +1050,8 @@ setupNodeEvents(on, config) {
 ```
 
 ---
+
+[↑ Back to Table of Contents](#table-of-contents)
 
 ## Tips & Patterns
 
